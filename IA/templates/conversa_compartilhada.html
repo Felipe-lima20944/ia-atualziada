@@ -1,0 +1,480 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversa Compartilhada | {{ conversa.titulo }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ==================================== */
+        /* VARIÁVEIS DE CORES E EFEITOS         */
+        /* ==================================== */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1c1c1c 0%, #0a0a0a 100%);
+            --secondary-gradient: linear-gradient(135deg, #333333 0%, #1a1a1a 100%);
+            --accent-gradient-red: linear-gradient(135deg, #ff0000 0%, #990000 100%);
+            --accent-gradient-blue: linear-gradient(135deg, #0077b6 0%, #00b4d8 100%);
+            --accent-gradient-white: linear-gradient(135deg, #f0f0f0 0%, #cccccc 100%);
+            
+            --success-gradient: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            --warning-gradient: linear-gradient(135deg, #ffc107 0%, #e00f00 100%);
+            --danger-gradient: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            
+            --bg-main: linear-gradient(135deg, #0a0a0a 0%, #1c1c1c 100%);
+            --bg-secondary: linear-gradient(135deg, #333333 0%, #1a1a1a 100%);
+            --bg-chat: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(35, 35, 35, 0.95) 100%);
+            
+            --glass-bg: rgba(50, 50, 50, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            
+            --text-primary: #f0f0f0;
+            --text-secondary: #aaaaaa;
+            --text-muted: #777777;
+            --text-inverse: #ffffff;
+            
+            --border-color: rgba(255, 0, 0, 0.3);
+            --hover-color: rgba(255, 0, 0, 0.1);
+            
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.4);
+            --shadow-xl: 0 20px 25px rgba(0,0,0,0.5);
+            
+            --blur-effect: blur(20px);
+            --transition-smooth: all 0.2s ease-in-out;
+            --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        [data-theme="moderno-claro"] {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            
+            --bg-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-secondary: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 50%, #e1f5fe 100%);
+            --bg-chat: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.95) 100%);
+            
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --text-inverse: #ffffff;
+            
+            --border-color: rgba(226, 232, 240, 0.8);
+            --hover-color: rgba(99, 102, 241, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary-gradient: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            --secondary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --accent-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            
+            --bg-main: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            --bg-secondary: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            --bg-chat: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(51, 65, 85, 0.95) 100%);
+            
+            --glass-bg: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(148, 163, 184, 0.1);
+            
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --text-inverse: #0f172a;
+            
+            --border-color: rgba(71, 85, 105, 0.3);
+            --hover-color: rgba(56, 189, 248, 0.1);
+        }
+
+        [data-theme="cosmic"] {
+            --primary-gradient: linear-gradient(135deg, #0a0a0a 0%, #1c1c1c 100%);
+            --secondary-gradient: linear-gradient(135deg, #333333 0%, #1a1a1a 100%);
+            --accent-gradient-red: linear-gradient(135deg, #ff0000 0%, #990000 100%);
+            --accent-gradient: linear-gradient(135deg, #0077b6 0%, #00b4d8 100%);
+            
+            --bg-main: linear-gradient(135deg, #0a0a0a 0%, #1c1c1c 100%);
+            --bg-secondary: linear-gradient(135deg, #333333 0%, #1a1a1a 100%);
+            --bg-chat: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(35, 35, 35, 0.95) 100%);
+            
+            --glass-bg: rgba(50, 50, 50, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            
+            --text-primary: #f0f0f0;
+            --text-secondary: #aaaaaa;
+            --text-muted: #777777;
+            --text-inverse: #ffffff;
+            
+            --border-color: rgba(0, 119, 182, 0.3);
+            --hover-color: rgba(0, 119, 182, 0.1);
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-y: auto;
+        }
+
+        .chat-wrapper {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            backdrop-filter: var(--blur-effect);
+            -webkit-backdrop-filter: var(--blur-effect);
+        }
+        
+        /* Sidebar para página compartilhada */
+        .sidebar-shared {
+            width: 250px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-effect);
+            -webkit-backdrop-filter: var(--blur-effect);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            position: relative;
+            box-shadow: var(--glass-shadow);
+            color: var(--text-primary);
+            flex-shrink: 0;
+        }
+
+        .sidebar-shared .logo-and-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-shared .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .sidebar-shared h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .sidebar-shared .info-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .sidebar-shared .info-box h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .sidebar-shared .info-box p {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .chat-main-shared {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-chat);
+            position: relative;
+            overflow: hidden;
+        }
+        .chat-main-shared::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(255, 0, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 0, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 0, 0, 0.3) transparent;
+            position: relative;
+            z-index: 5;
+        }
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--accent-gradient-red);
+            border-radius: 3px;
+        }
+
+        /* Estilos das Mensagens (reutilizados e aprimorados) */
+        .message {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            gap: 0.75rem;
+        }
+        .message.user {
+            justify-content: flex-end;
+            flex-direction: row-reverse;
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            font-size: 1rem;
+            box-shadow: var(--shadow-md);
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+        .message.user .avatar {
+            background: var(--accent-gradient-red);
+            color: var(--text-inverse);
+            border: none;
+        }
+        .message.user .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .message.model .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .message-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            max-width: 75%;
+        }
+        .message.user .message-content-wrapper {
+            max-width: fit-content;
+            text-align: right;
+            align-items: flex-end;
+        }
+        .message-author {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+        .message.user .message-author {
+            text-align: right;
+            color: var(--text-secondary);
+        }
+        .content {
+            padding: 1rem 1.25rem;
+            border-radius: 1.25rem;
+            line-height: 1.6;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            box-shadow: var(--shadow-md);
+            font-size: 0.9rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            /* Ajuste para que a div se ajuste ao tamanho do conteúdo */
+            width: fit-content;
+            max-width: 100%;
+        }
+        .message.user .content {
+            background: var(--accent-gradient-red);
+            color: var(--text-inverse);
+            border: none;
+            border-bottom-right-radius: 0.5rem;
+        }
+        .message.model .content {
+            border-bottom-left-radius: 0.5rem;
+        }
+
+        /* Estilos para Markdown (blocos de código, etc.) */
+        .markdown-container {
+            line-height: 1.6;
+        }
+        .markdown-container pre {
+            background: #1e1e1e;
+            border: 1px solid #333333;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin: 0.75rem 0;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #d4d4d4;
+            /* Garante que o bloco de código se ajuste ao conteúdo */
+            width: fit-content;
+            max-width: 100%;
+        }
+        .markdown-container code:not(pre code) {
+            background: rgba(255, 0, 0, 0.1);
+            color: var(--text-primary);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .message-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-md);
+        }
+        .file-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+        .text-center {
+            text-align: center;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            body {
+                overflow-y: auto;
+            }
+            .chat-wrapper {
+                flex-direction: column;
+                height: auto;
+            }
+            .sidebar-shared {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border);
+                padding: 1.5rem;
+            }
+            .chat-main-shared {
+                padding: 1rem;
+            }
+            .chat-messages {
+                padding: 1rem;
+            }
+            .message-content-wrapper {
+                max-width: 85%;
+            }
+            .content {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+            .chat-header-shared h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body data-theme="black-red">
+    <div class="chat-wrapper">
+        <aside class="sidebar-shared">
+            <div class="logo-and-title">
+                <img src="{% static 'logos.jpeg' %}" alt="Logo Aether IA" class="logo">
+                <h2>Aether IA</h2>
+            </div>
+
+            <div class="info-box">
+                <h3>Conversa</h3>
+                <p>{{ conversa.titulo }}</p>
+            </div>
+            
+            <div class="info-box">
+                <h3>Criado por</h3>
+                <p>{{ conversa.criado_por }}</p>
+            </div>
+            
+            <div class="info-box">
+                <h3>Personalidade</h3>
+                <p>{{ conversa.personalidade_nome }}</p>
+            </div>
+            
+        </aside>
+        
+        <main class="chat-main-shared">
+            <div class="chat-messages">
+                {% for mensagem in conversa.mensagens %}
+                    <div class="message {{ mensagem.papel }}">
+                        <div class="avatar">
+                            {% if mensagem.avatar_url %}
+                                <img src="{{ mensagem.avatar_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            {% else %}
+                                {% if mensagem.papel == 'user' %}
+                                    <img src="{% static 'user-placeholder.png' %}" alt="Avatar do Usuário">
+                                {% else %}
+                                    <img src="{% static 'logos.jpeg' %}" alt="Avatar da IA">
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        <div class="message-content-wrapper">
+                            <div class="message-author">
+                                {{ mensagem.nome_autor }}
+                            </div>
+                            <div class="content">
+                                {% if mensagem.tipo_conteudo == 'image' %}
+                                    <img src="{{ mensagem.dados_conteudo }}" alt="Imagem" class="message-image">
+                                {% elif mensagem.tipo_conteudo == 'audio' %}
+                                    <audio controls src="{{ mensagem.dados_conteudo }}"></audio>
+                                {% elif mensagem.tipo_conteudo == 'file' %}
+                                    <div class="file-content">
+                                        <i class="fas fa-file-alt"></i>
+                                        <span>Arquivo anexado: {{ mensagem.texto }}</span>
+                                    </div>
+                                {% else %}
+                                    <div class="markdown-container">
+                                        {{ mensagem.texto_html|safe }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-center" style="font-size: 1rem; color: var(--text-muted); margin-top: 2rem;">Esta conversa está vazia.</p>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>

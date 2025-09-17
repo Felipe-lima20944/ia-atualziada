@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursos | Chat Nova IA</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Variáveis de cores e fontes para o tema padrão */
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --container-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --accent-color: #e11d48;
+            --accent-hover: #be185d;
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        /* Tema Cyber Dark */
+        body[data-theme="cyber-dark"] {
+            --bg-color: #0f172a;
+            --text-color: #e2e8f0;
+            --container-bg: #1e293b;
+            --border-color: #475569;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+        }
+        /* Tema Vermelho e Preto (chamado "vermelho-noir") */
+        body[data-theme="vermelho-noir"] {
+            --bg-color: #000000;
+            --text-color: #fafafa;
+            --container-bg: #171717;
+            --border-color: #404040;
+            --accent-color: #dc2626;
+            --accent-hover: #b91c1c;
+        }
+        * { box-sizing: border-box; }
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Space Mono', monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+        }
+        header, footer {
+            width: 100%;
+            background-color: var(--container-bg);
+            padding: 25px 50px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border-color);
+        }
+        footer {
+            border-bottom: none;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            gap: 15px;
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-logo img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header-logo h2 {
+            font-size: 24px;
+            margin: 0;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header-nav {
+            display: flex;
+            gap: 30px;
+            flex-grow: 1;
+            justify-content: center;
+        }
+        .header-nav a {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            transition: color 0.2s;
+            position: relative;
+        }
+        .header-nav a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent-color);
+            transform: scaleX(0);
+            transition: transform 0.3s ease-out;
+        }
+        .header-nav a:hover::after, .header-nav a[aria-current="page"]::after {
+            transform: scaleX(1);
+        }
+        .main-container {
+            flex-grow: 1;
+            width: 100%;
+            max-width: 1100px;
+            padding: 50px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            margin: 0 auto;
+        }
+        .main-container h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .main-container p {
+            font-size: 19px;
+            color: var(--text-color);
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            width: 100%;
+        }
+        .feature-card {
+            background-color: var(--container-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .feature-card h3 {
+            font-size: 24px;
+            margin-top: 0;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .feature-card p {
+            font-size: 17px;
+            color: var(--text-color);
+            margin: 0;
+        }
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .footer-text {
+            color: var(--text-color);
+            font-size: 15px;
+            margin: 0;
+        }
+        .footer-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+        .footer-link:hover {
+            color: var(--accent-hover);
+        }
+        #theme-toggle {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-color);
+            opacity: 0.8;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        #theme-toggle:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        @media (max-width: 768px) {
+            header, footer { padding: 20px; }
+            .main-container { padding: 30px 20px; }
+            h1 { font-size: 36px; }
+            p { font-size: 17px; }
+            .header-logo h2 { font-size: 22px; }
+            .header-nav {
+                width: 100%;
+                justify-content: center;
+                margin-top: 15px;
+                gap: 20px;
+            }
+            .header-nav a { font-size: 16px; }
+            #theme-toggle { font-size: 24px; }
+        }
+        @media (max-width: 500px) {
+            header .header-nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="vermelho-noir">
+
+    {% load static %}
+
+    <header>
+        <div class="header-logo">
+            <img src="{% static 'gif.gif' %}" alt="Logo Chat Nova IA">
+            <h2>Chat Nova IA</h2>
+        </div>
+        <nav class="header-nav" aria-label="Navegação Principal">
+            <a href="index.html">Início</a>
+            <a href="recursos.html" aria-current="page">Recursos</a>
+            <a href="planos.html">Planos</a>
+            <a href="contato.html">Contato</a>
+        </nav>
+        <button id="theme-toggle" title="Alternar tema">
+            <i class="fas fa-sun" aria-hidden="true"></i>
+        </button>
+    </header>
+
+    <main class="main-container">
+        <h1>Recursos e Ferramentas</h1>
+        <p>
+            Descubra as capacidades avançadas do Chat Nova IA. Oferecemos ferramentas de processamento de linguagem natural de ponta, geração de texto criativo, análise de dados e muito mais. Nossa IA é construída para se adaptar às suas necessidades, seja para projetos pessoais ou profissionais.
+        </p>
+
+        <section class="feature-grid">
+            <div class="feature-card">
+                <h3>Geração de Código</h3>
+                <p>Crie códigos complexos ou scripts simples em diversas linguagens de programação.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Conversa sem parametro de etica </h3>
+                <p>Traduza textos e conversas instantaneamente, superando barreiras linguísticas.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Resumo de Conteúdo</h3>
+                <p>antenha conversas longas e aprofundadas sobre qualquer assunto. A IA é capaz de lembrar o contexto e continuar o diálogo de forma fluida, por quanto tempo você precisar</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#" class="footer-link">Política de Privacidade</a> | 
+                <a href="#" class="footer-link">Termos de Uso</a> |
+                <a href="#" class="footer-link">FAQ</a>
+            </div>
+            <p class="footer-text">© 2025 Chat Nova IA. Todos os direitos reservados. Versão 1.0.0</p>
+            <p class="footer-text">Desenvolvido por <a href="https://www.flsoftaews.com.br" target="_blank" rel="noopener noreferrer" class="footer-link">FL Softaews</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const body = document.body;
+
+            function applySavedTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme) {
+                    body.setAttribute('data-theme', savedTheme);
+                } else {
+                    body.setAttribute('data-theme', 'vermelho-noir');
+                }
+                updateThemeIcon();
+            }
+
+            function updateThemeIcon() {
+                const currentTheme = body.getAttribute('data-theme') || 'vermelho-noir';
+                const icon = themeToggleBtn.querySelector('i');
+                if (currentTheme === 'default') {
+                    icon.className = 'fas fa-moon';
+                } else if (currentTheme === 'cyber-dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-adjust';
+                }
+            }
+
+            function toggleTheme() {
+                const currentTheme = body.getAttribute('data-theme') || 'vermelho-noir';
+                let newTheme;
+                if (currentTheme === 'vermelho-noir') {
+                    newTheme = 'default';
+                } else if (currentTheme === 'default') {
+                    newTheme = 'cyber-dark';
+                } else {
+                    newTheme = 'vermelho-noir';
+                }
+                body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon();
+            }
+
+            themeToggleBtn.addEventListener('click', toggleTheme);
+            applySavedTheme();
+        });
+    </script>
+</body>
+</html>

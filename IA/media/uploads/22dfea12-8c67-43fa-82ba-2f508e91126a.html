@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planos | Chat Nova IA</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Variáveis de cores e fontes para o tema padrão */
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --container-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --accent-color: #e11d48;
+            --accent-hover: #be185d;
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        /* Tema Cyber Dark */
+        body[data-theme="cyber-dark"] {
+            --bg-color: #0f172a;
+            --text-color: #e2e8f0;
+            --container-bg: #1e293b;
+            --border-color: #475569;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+        }
+        /* Tema Vermelho e Preto (chamado "vermelho-noir") */
+        body[data-theme="vermelho-noir"] {
+            --bg-color: #000000;
+            --text-color: #fafafa;
+            --container-bg: #171717;
+            --border-color: #404040;
+            --accent-color: #dc2626;
+            --accent-hover: #b91c1c;
+        }
+
+        /* --- Correção do Rodapé com Flexbox --- */
+        * { box-sizing: border-box; }
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Space Mono', monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+        }
+        header, footer {
+            width: 100%;
+            background-color: var(--container-bg);
+            padding: 25px 50px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border-color);
+        }
+        footer {
+            border-bottom: none;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            gap: 15px;
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-logo img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header-logo h2 {
+            font-size: 24px;
+            margin: 0;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header-nav {
+            display: flex;
+            gap: 30px;
+            flex-grow: 1;
+            justify-content: center;
+        }
+        .header-nav a {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            transition: color 0.2s;
+            position: relative;
+        }
+        .header-nav a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent-color);
+            transform: scaleX(0);
+            transition: transform 0.3s ease-out;
+        }
+        .header-nav a:hover::after, .header-nav a[aria-current="page"]::after {
+            transform: scaleX(1);
+        }
+        .main-container {
+            flex-grow: 1;
+            width: 100%;
+            max-width: 1100px;
+            padding: 50px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            margin: 0 auto;
+        }
+        .main-container h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .main-container p {
+            font-size: 19px;
+            color: var(--text-color);
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+
+        /* --- Estilos para a Tabela de Preços --- */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            width: 100%;
+            max-width: 800px;
+        }
+        .plan-card {
+            background-color: var(--container-bg);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .plan-card.featured {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            border: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        .plan-card.featured h3 {
+            color: white;
+            background: none;
+            -webkit-text-fill-color: initial;
+            margin-bottom: 0;
+        }
+        .plan-card h3 {
+            font-size: 28px;
+            margin-top: 0;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .plan-card .price {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 0.5rem 0 1.5rem;
+            color: var(--accent-color);
+            transition: color 0.3s;
+        }
+        .plan-card.featured .price {
+            color: white;
+            text-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        .plan-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 2rem;
+            text-align: left;
+        }
+        .plan-card ul li {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        .plan-card ul li::before {
+            content: '✓';
+            color: var(--accent-color);
+            font-size: 1.25rem;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .plan-card.featured ul li::before {
+            color: white;
+        }
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+            transition: all 0.2s;
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+        }
+        .cta-button:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+        }
+        .plan-card.featured .cta-button {
+            background: white;
+            color: var(--accent-color);
+        }
+
+        /* Rodapé */
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .footer-text {
+            color: var(--text-color);
+            font-size: 15px;
+            margin: 0;
+        }
+        .footer-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+        .footer-link:hover {
+            color: var(--accent-hover);
+        }
+        #theme-toggle {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-color);
+            opacity: 0.8;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        #theme-toggle:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        @media (max-width: 768px) {
+            header, footer { padding: 20px; }
+            .main-container { padding: 30px 20px; }
+            h1 { font-size: 36px; }
+            p { font-size: 17px; }
+            .header-logo h2 { font-size: 22px; }
+            .header-nav {
+                width: 100%;
+                justify-content: center;
+                margin-top: 15px;
+                gap: 20px;
+            }
+            .header-nav a { font-size: 16px; }
+            #theme-toggle { font-size: 24px; }
+            .pricing-grid { flex-direction: column; }
+            .plan-card.featured { transform: scale(1); }
+        }
+        @media (max-width: 500px) {
+            header .header-nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="vermelho-noir">
+
+    {% load static %}
+
+    <header>
+        <div class="header-logo">
+            <img src="{% static 'gif.gif' %}" alt="Logo Chat Nova IA">
+            <h2>Chat Nova IA</h2>
+        </div>
+        <nav class="header-nav" aria-label="Navegação Principal">
+            <a href="index.html">Início</a>
+            <a href="recursos.html">Recursos</a>
+            <a href="planos.html" aria-current="page">Planos</a>
+            <a href="contato.html">Contato</a>
+        </nav>
+        <button id="theme-toggle" title="Alternar tema">
+            <i class="fas fa-sun" aria-hidden="true"></i>
+        </button>
+    </header>
+
+    <main class="main-container">
+        <h1>Escolha o Plano Perfeito</h1>
+        <p>
+            Oferecemos planos flexíveis para se adequar às suas necessidades, desde uso pessoal até soluções empresariais. Comece a explorar todo o potencial do Chat Nova IA hoje mesmo.
+        </p>
+        <section class="pricing-grid">
+            <div class="plan-card">
+                <h3>Plano Gratuito</h3>
+                <p class="price">R$0/mês</p>
+                <ul>
+                    <li>Conversas ilimitadas</li>
+                    <li>Acesso aos recursos básicos</li>
+                    <li>Suporte da comunidade</li>
+                </ul>
+                <a href="#" class="cta-button">Começar</a>
+            </div>
+            <div class="plan-card featured">
+                <h3>Plano Pro</h3>
+                <p class="price">R$49,90/mês</p>
+                <ul>
+                    <li>Tudo do Plano Gratuito</li>
+                    <li>Recursos avançados</li>
+                    <li>Prioridade no suporte</li>
+                    <li>Acesso a novos recursos em beta</li>
+                </ul>
+                <a href="#" class="cta-button">Assinar Agora</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#" class="footer-link">Política de Privacidade</a> | 
+                <a href="#" class="footer-link">Termos de Uso</a> |
+                <a href="#" class="footer-link">FAQ</a>
+            </div>
+            <p class="footer-text">© 2025 Chat Nova IA. Todos os direitos reservados. Versão 1.0.0</p>
+            <p class="footer-text">Desenvolvido por <a href="https://www.flsoftaews.com.br" target="_blank" rel="noopener noreferrer" class="footer-link">FL Softaews</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const body = document.body;
+
+            function applySavedTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme) {
+                    body.setAttribute('data-theme', savedTheme);
+                } else {
+                    body.setAttribute('data-theme', 'vermelho-noir');
+                }
+                updateThemeIcon();
+            }
+
+            function updateThemeIcon() {
+                const currentTheme = body.getAttribute('data-theme') || 'vermelho-noir';
+                const icon = themeToggleBtn.querySelector('i');
+                if (currentTheme === 'default') {
+                    icon.className = 'fas fa-moon';
+                } else if (currentTheme === 'cyber-dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-adjust';
+                }
+            }
+
+            function toggleTheme() {
+                const currentTheme = body.getAttribute('data-theme') || 'vermelho-noir';
+                let newTheme;
+                if (currentTheme === 'vermelho-noir') {
+                    newTheme = 'default';
+                } else if (currentTheme === 'default') {
+                    newTheme = 'cyber-dark';
+                } else {
+                    newTheme = 'vermelho-noir';
+                }
+                body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon();
+            }
+
+            themeToggleBtn.addEventListener('click', toggleTheme);
+            applySavedTheme();
+        });
+    </script>
+</body>
+</html>
